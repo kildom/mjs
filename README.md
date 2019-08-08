@@ -28,8 +28,9 @@ This approach causes some significant implications:
 - Command line tool that compiles source code files into bytecode.
 - Javascript library allowing compilation of a source code in a browser. This allows bytecode handling with a web interface.
   It will be based on command line tool compiled with Emscripten.
-- Merging repeating strings into one to reduce bytecode size.
-- Debugger interface.
+- Nice to have, but not sure if they will be implemented at all:
+  - Merging repeating strings into one to reduce bytecode size.
+  - Debugger interface.
 
 mJS: Restricted JavaScript engine
 ====================================
