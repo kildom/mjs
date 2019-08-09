@@ -13,6 +13,8 @@
 #include "mjs/src/mjs_primitive.h"
 #include "mjs/src/mjs_string.h"
 #include "mjs/src/mjs_util.h"
+ 
+#if CS_ENABLE_STDIO
 
 static void mjs_print(struct mjs *mjs) {
   size_t i, num_args = mjs_nargs(mjs);
@@ -23,6 +25,8 @@ static void mjs_print(struct mjs *mjs) {
   putchar('\n');
   mjs_return(mjs, MJS_UNDEFINED);
 }
+
+#endif
 
 /*
  * If the file with the given filename was already loaded, returns the
@@ -46,6 +50,8 @@ static struct mjs_bcode_part *mjs_get_loaded_file_bcode(struct mjs *mjs,
   }
   return NULL;
 }
+
+#if defined(WITH_PARSER) && CS_ENABLE_STDIO
 
 static void mjs_load(struct mjs *mjs) {
   mjs_val_t res = MJS_UNDEFINED;
@@ -100,6 +106,8 @@ static void mjs_load(struct mjs *mjs) {
   mjs_return(mjs, res);
 }
 
+#endif // WITH_PARSER
+
 static void mjs_get_mjs(struct mjs *mjs) {
   mjs_return(mjs, mjs_mk_foreign(mjs, mjs));
 }
@@ -131,11 +139,14 @@ void mjs_init_builtin(struct mjs *mjs, mjs_val_t obj) {
   mjs_val_t v;
 
   mjs_set(mjs, obj, "global", ~0, obj);
-
+#if defined(WITH_PARSER) && CS_ENABLE_STDIO
   mjs_set(mjs, obj, "load", ~0,
           mjs_mk_foreign_func(mjs, (mjs_func_ptr_t) mjs_load));
+#endif 
+#if CS_ENABLE_STDIO
   mjs_set(mjs, obj, "print", ~0,
           mjs_mk_foreign_func(mjs, (mjs_func_ptr_t) mjs_print));
+#endif
   mjs_set(mjs, obj, "ffi", ~0,
           mjs_mk_foreign_func(mjs, (mjs_func_ptr_t) mjs_ffi_call));
   mjs_set(mjs, obj, "ffi_cb_free", ~0,
@@ -153,6 +164,7 @@ void mjs_init_builtin(struct mjs *mjs, mjs_val_t obj) {
   mjs_set(mjs, obj, "s2o", ~0,
           mjs_mk_foreign_func(mjs, (mjs_func_ptr_t) mjs_s2o));
 
+#ifdef WITH_JSON
   /*
    * Populate JSON.parse() and JSON.stringify()
    */
@@ -162,6 +174,7 @@ void mjs_init_builtin(struct mjs *mjs, mjs_val_t obj) {
   mjs_set(mjs, v, "parse", ~0,
           mjs_mk_foreign_func(mjs, (mjs_func_ptr_t) mjs_op_json_parse));
   mjs_set(mjs, obj, "JSON", ~0, v);
+#endif
 
   /*
    * Populate Object.create()

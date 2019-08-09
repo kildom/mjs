@@ -22,19 +22,23 @@
 
 #include <ctype.h>
 #include <stdarg.h>
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/platform.h"
+
 #if !defined(WEAK)
-#if (defined(__GNUC__) || defined(__TI_COMPILER_VERSION__)) && !defined(_WIN32)
+#if (defined(__GNUC__) || defined(__TI_COMPILER_VERSION__)) && !defined(_MSC_VER)
 #define WEAK __attribute__((weak))
 #else
 #define WEAK
 #endif
 #endif
 
-#ifdef _WIN32
+#if (CS_PLATFORM == CS_P_WINDOWS)
 #undef snprintf
 #undef vsnprintf
 #define snprintf cs_win_snprintf
@@ -477,10 +481,14 @@ int json_printer_buf(struct json_out *out, const char *buf, size_t len) {
   return len;
 }
 
+#if CS_ENABLE_STDIO
+
 int json_printer_file(struct json_out *out, const char *buf, size_t len) WEAK;
 int json_printer_file(struct json_out *out, const char *buf, size_t len) {
   return fwrite(buf, 1, len, out->u.fp);
 }
+
+#endif
 
 #if JSON_ENABLE_BASE64
 static int b64idx(int c) {
@@ -1095,6 +1103,8 @@ int json_scanf(const char *str, int len, const char *fmt, ...) {
   return result;
 }
 
+#if CS_ENABLE_STDIO
+
 int json_vfprintf(const char *file_name, const char *fmt, va_list ap) WEAK;
 int json_vfprintf(const char *file_name, const char *fmt, va_list ap) {
   int res = -1;
@@ -1140,6 +1150,8 @@ char *json_fread(const char *path) {
   }
   return data;
 }
+
+#endif
 
 struct json_setf_data {
   const char *json_path;
@@ -1338,6 +1350,8 @@ int json_prettify(const char *s, int len, struct json_out *out) {
   return json_walk(s, len, prettify_cb, &pd);
 }
 
+#if CS_ENABLE_STDIO
+
 int json_prettify_file(const char *file_name) WEAK;
 int json_prettify_file(const char *file_name) {
   int res = -1;
@@ -1360,6 +1374,8 @@ int json_prettify_file(const char *file_name) {
   free(s);
   return res;
 }
+
+#endif
 
 struct next_data {
   void *handle;            // Passed handle. Changed if a next entry is found

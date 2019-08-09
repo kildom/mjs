@@ -3,7 +3,9 @@
  * All rights reserved
  */
 
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 #include "common/str_util.h"
 #include "mjs/src/mjs_array.h"
 #include "mjs/src/mjs_conversion.h"

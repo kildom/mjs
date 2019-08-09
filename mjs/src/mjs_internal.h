@@ -10,8 +10,12 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 #include <string.h>
+
+#include "common/platform.h"
 
 #ifndef FAST
 #define FAST
@@ -38,7 +42,7 @@
 #endif
 
 #if !defined(WEAK)
-#if (defined(__GNUC__) || defined(__TI_COMPILER_VERSION__)) && !defined(_WIN32)
+#if (defined(__GNUC__) || defined(__TI_COMPILER_VERSION__)) && !(CS_PLATFORM == CS_P_WINDOWS)
 #define WEAK __attribute__((weak))
 #else
 #define WEAK
@@ -53,7 +57,7 @@
 #include "common/cs_file.h"
 #include "common/mbuf.h"
 
-#if defined(_WIN32) && _MSC_VER < 1700
+#if (CS_PLATFORM == CS_P_WINDOWS) && _MSC_VER < 1700
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
 typedef int int32_t;

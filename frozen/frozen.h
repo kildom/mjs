@@ -25,9 +25,13 @@ extern "C" {
 
 #include <stdarg.h>
 #include <stddef.h>
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 
-#if defined(_WIN32) && _MSC_VER < 1700
+#include "common/platform.h"
+
+#if defined(_WIN32) && (CS_PLATFORM == CS_P_WINDOWS)
 typedef int bool;
 enum { false = 0, true = 1 };
 #else
@@ -118,7 +122,9 @@ struct json_out {
       size_t len;
     } buf;
     void *data;
+#if CS_ENABLE_STDIO
     FILE *fp;
+#endif
   } u;
 };
 

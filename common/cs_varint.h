@@ -18,7 +18,9 @@
 #ifndef CS_COMMON_CS_VARINT_H_
 #define CS_COMMON_CS_VARINT_H_
 
-#if defined(_WIN32) && _MSC_VER < 1700
+#include "common/platform.h"
+
+#if (CS_PLATFORM == CS_P_WINDOWS) && (_MSC_VER < 1700)
 typedef unsigned char uint8_t;
 typedef unsigned __int64 uint64_t;
 #else

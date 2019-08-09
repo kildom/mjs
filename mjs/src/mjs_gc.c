@@ -3,7 +3,9 @@
  * All rights reserved
  */
 
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 
 #include "common/cs_varint.h"
 #include "common/mbuf.h"

@@ -7,7 +7,9 @@
 #define MJS_UTIL_PUBLIC_H_
 
 #include "mjs/src/mjs_core_public.h"
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 
 #if defined(__cplusplus)
 extern "C" {
@@ -15,7 +17,9 @@ extern "C" {
 
 const char *mjs_typeof(mjs_val_t v);
 
+#if CS_ENABLE_STDIO
 void mjs_fprintf(mjs_val_t v, struct mjs *mjs, FILE *fp);
+#endif
 void mjs_sprintf(mjs_val_t v, struct mjs *mjs, char *buf, size_t buflen);
 
 #if MJS_ENABLE_DEBUG

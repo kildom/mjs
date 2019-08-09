@@ -154,6 +154,8 @@ mjs_err_t mjs_prepend_errorf(struct mjs *mjs, mjs_err_t err, const char *fmt,
   }
   return err;
 }
+ 
+#if CS_ENABLE_STDIO
 
 void mjs_print_error(struct mjs *mjs, FILE *fp, const char *msg,
                      int print_stack_trace) {
@@ -167,6 +169,8 @@ void mjs_print_error(struct mjs *mjs, FILE *fp, const char *msg,
 
   fprintf(fp, "%s: %s\n", msg, mjs_strerror(mjs, mjs->error));
 }
+
+#endif
 
 MJS_PRIVATE void mjs_die(struct mjs *mjs) {
   mjs_val_t msg_v = MJS_UNDEFINED;
@@ -244,9 +248,11 @@ static void mjs_append_stack_trace_line(struct mjs *mjs, size_t offset) {
     char *new_line = NULL;
     const char *fmt = "  at %s:%d\n";
     if (filename == NULL) {
+#if CS_ENABLE_STDIO
       fprintf(stderr,
               "ERROR during stack trace generation: wrong bcode offset %d\n",
               (int) offset);
+#endif
       filename = "<unknown-filename>";
     }
     mg_asprintf(&new_line, 0, fmt, filename, line_no);

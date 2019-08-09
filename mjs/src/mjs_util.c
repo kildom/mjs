@@ -87,11 +87,15 @@ void mjs_sprintf(mjs_val_t v, struct mjs *mjs, char *buf, size_t n) {
   struct json_out out = JSON_OUT_BUF(buf, n);
   mjs_jprintf(v, mjs, &out);
 }
+ 
+#if CS_ENABLE_STDIO
 
 void mjs_fprintf(mjs_val_t v, struct mjs *mjs, FILE *fp) {
   struct json_out out = JSON_OUT_FILE(fp);
   mjs_jprintf(v, mjs, &out);
 }
+
+#endif
 
 #if MJS_ENABLE_DEBUG
 

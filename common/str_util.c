@@ -238,7 +238,7 @@ int c_snprintf(char *buf, size_t buf_size, const char *fmt, ...) {
   return result;
 }
 
-#ifdef _WIN32
+#if (CS_PLATFORM == CS_P_WINDOWS)
 int to_wchar(const char *path, wchar_t *wbuf, size_t wbuf_len) {
   int ret;
   char buf[MAX_PATH * 2], buf2[MAX_PATH * 2], *p;
@@ -386,7 +386,7 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
   int len;
 
   va_copy(ap_copy, ap);
-  len = vsnprintf(*buf, size, fmt, ap_copy);
+  len = c_vsnprintf(*buf, size, fmt, ap_copy);
   va_end(ap_copy);
 
   if (len < 0) {
@@ -405,7 +405,7 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
         break;
       }
       va_copy(ap_copy, ap);
-      len = vsnprintf(*buf, size - 1, fmt, ap_copy);
+      len = c_vsnprintf(*buf, size - 1, fmt, ap_copy);
       va_end(ap_copy);
     }
 
@@ -421,7 +421,7 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
       len = -1; /* LCOV_EXCL_LINE */
     } else {    /* LCOV_EXCL_LINE */
       va_copy(ap_copy, ap);
-      len = vsnprintf(*buf, len + 1, fmt, ap_copy);
+      len = c_vsnprintf(*buf, len + 1, fmt, ap_copy);
       va_end(ap_copy);
     }
   }

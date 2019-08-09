@@ -990,13 +990,17 @@ clean:
   return mjs->error;
 }
 
+#ifdef WITH_PARSER
+
 MJS_PRIVATE mjs_err_t mjs_exec_internal(struct mjs *mjs, const char *path,
                                         const char *src, int generate_jsc,
                                         mjs_val_t *res) {
   size_t off = mjs->bcode_len;
   mjs_val_t r = MJS_UNDEFINED;
   mjs->error = mjs_parse(path, src, mjs);
+#if CS_ENABLE_STDIO
   if (cs_log_level >= LL_VERBOSE_DEBUG) mjs_dump(mjs, 1);
+#endif
   if (generate_jsc == -1) generate_jsc = mjs->generate_jsc;
   if (mjs->error == MJS_OK) {
 #if MJS_GENERATE_JSC && defined(CS_MMAP)
@@ -1075,6 +1079,8 @@ MJS_PRIVATE mjs_err_t mjs_exec_internal(struct mjs *mjs, const char *path,
 mjs_err_t mjs_exec(struct mjs *mjs, const char *src, mjs_val_t *res) {
   return mjs_exec_internal(mjs, "<stdin>", src, 0 /* generate_jsc */, res);
 }
+ 
+#if CS_ENABLE_STDIO
 
 mjs_err_t mjs_exec_file(struct mjs *mjs, const char *path, mjs_val_t *res) {
   mjs_err_t error = MJS_FILE_READ_ERROR;
@@ -1095,6 +1101,35 @@ mjs_err_t mjs_exec_file(struct mjs *mjs, const char *path, mjs_val_t *res) {
 clean:
   if (res != NULL) *res = r;
   return error;
+}
+
+#endif // CS_ENABLE_STDIO
+
+mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const char **p, size_t *len) {
+  mjs->error = mjs_parse(path ? path : "<stdin>", src, mjs);
+  if (mjs->error == MJS_OK) {
+    struct mjs_bcode_part *bp = mjs_bcode_part_get(mjs, mjs_bcode_parts_cnt(mjs) - 1);
+    *p = bp->data.p;
+    *len = bp->data.len;
+  }
+  return mjs->error;
+}
+
+#endif // WITH_PARSER
+
+mjs_err_t mjs_exec_compiled(struct mjs *mjs, const char *p, size_t len, mjs_val_t *res) {
+  size_t off = mjs->bcode_len;
+  mbuf_free(&mjs->bcode_gen);
+  mjs->bcode_gen.buf = (char*)p;
+  mjs->bcode_gen.len = len;
+  mjs->bcode_gen.size = len;
+  mjs_bcode_commit(mjs);
+  struct mjs_bcode_part *bp = mjs_bcode_part_get(mjs, mjs_bcode_parts_cnt(mjs) - 1);
+  bp->in_rom = 1;
+  mjs_val_t r = MJS_UNDEFINED;
+  mjs_execute(mjs, off, &r);
+  if (res != NULL) *res = r;
+  return mjs->error;
 }
 
 mjs_err_t mjs_call(struct mjs *mjs, mjs_val_t *res, mjs_val_t func,

@@ -7,7 +7,9 @@
 #define MJS_EXEC_PUBLIC_H_
 
 #include "mjs/src/mjs_core_public.h"
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 
 #if defined(__cplusplus)
 extern "C" {

@@ -18,7 +18,9 @@
 #include "common/cs_dbg.h"
 
 #include <stdarg.h>
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 #include <string.h>
 
 #include "common/cs_time.h"

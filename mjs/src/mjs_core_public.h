@@ -13,7 +13,9 @@ typedef unsigned __int64 uint64_t;
 typedef int int32_t;
 typedef unsigned char uint8_t;
 #endif
+#if CS_ENABLE_STDIO
 #include <stdio.h>
+#endif
 #include <stddef.h>
 #include "mjs/src/mjs_license.h"
 #include "mjs/src/mjs_features.h"
@@ -185,6 +187,8 @@ mjs_err_t mjs_set_errorf(struct mjs *mjs, mjs_err_t err, const char *fmt, ...);
  */
 mjs_err_t mjs_prepend_errorf(struct mjs *mjs, mjs_err_t err, const char *fmt,
                              ...);
+ 
+#if CS_ENABLE_STDIO
 
 /*
  * Print the last error details. If print_stack_trace is non-zero, also
@@ -193,6 +197,8 @@ mjs_err_t mjs_prepend_errorf(struct mjs *mjs, mjs_err_t err, const char *fmt,
  */
 void mjs_print_error(struct mjs *mjs, FILE *fp, const char *msg,
                      int print_stack_trace);
+
+#endif
 
 /*
  * return a string representation of an error.

@@ -401,9 +401,11 @@ static union ffi_cb_data_val ffi_cb_impl_generic(void *param,
   if (err != MJS_OK) {
     /*
      * There's not much we can do about the error here; let's at least print it
-     */
+     */ 
+#if CS_ENABLE_STDIO
     mjs_print_error(mjs, stderr, "MJS callback error",
                     1 /* print_stack_trace */);
+#endif
 
     goto clean;
   }
@@ -1157,7 +1159,7 @@ MJS_PRIVATE int mjs_ffi_is_regular_word_or_void(mjs_ffi_ctype_t type) {
   return (type == MJS_FFI_CTYPE_NONE || mjs_ffi_is_regular_word(type));
 }
 
-#ifdef _WIN32
+#if (CS_PLATFORM == CS_P_WINDOWS)
 void *dlsym(void *handle, const char *name) {
   static HANDLE msvcrt_dll;
   void *sym = NULL;
