@@ -7,6 +7,7 @@
 #define MJS_EXEC_PUBLIC_H_
 
 #include "mjs/src/mjs_core_public.h"
+#include "common/mbuf.h"
 #if CS_ENABLE_STDIO
 #include <stdio.h>
 #endif
@@ -25,7 +26,7 @@ mjs_err_t mjs_call(struct mjs *mjs, mjs_val_t *res, mjs_val_t func,
                    mjs_val_t this_val, int nargs, ...);
 mjs_val_t mjs_get_this(struct mjs *mjs);
 
-mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const char **p, size_t *len, struct mbuf* line_no_map);
+mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const unsigned char **p, size_t *len, struct mbuf* line_no_map);
 
 #if defined(__cplusplus)
 }

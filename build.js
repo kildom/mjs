@@ -44,6 +44,8 @@ c.src = strarr`${c.src}
 
 if (c.variant != 'lib') {
     c.src = strarr`${c.src}
+        compiler.c
+        md5.c
         mjs/src/mjs_parser.c
         mjs/src/mjs_tok.c`;
 }

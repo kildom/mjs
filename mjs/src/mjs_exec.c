@@ -1105,7 +1105,7 @@ clean:
 
 #endif // CS_ENABLE_STDIO
 
-mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const char **p, size_t *len, struct mbuf* line_no_map) {
+mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const unsigned char **p, size_t *len, struct mbuf* line_no_map) {
   mjs->error = mjs_parse(path ? path : "<stdin>", src, mjs, line_no_map);
   if (mjs->error == MJS_OK) {
     struct mjs_bcode_part *bp = mjs_bcode_part_get(mjs, mjs_bcode_parts_cnt(mjs) - 1);
