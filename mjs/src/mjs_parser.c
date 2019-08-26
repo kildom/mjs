@@ -953,7 +953,7 @@ static mjs_err_t parse_statement(struct pstate *p) {
 }
 
 MJS_PRIVATE mjs_err_t
-mjs_parse(const char *path, const char *buf, struct mjs *mjs) {
+mjs_parse(const char *path, const char *buf, struct mjs *mjs, struct mbuf* line_no_map) {
   mjs_err_t res = MJS_OK;
   struct pstate p;
   size_t start_idx, llen;
@@ -989,6 +989,8 @@ mjs_parse(const char *path, const char *buf, struct mjs *mjs) {
   res = parse_statement_list(&p, TOK_EOF);
   emit_byte(&p, OP_EXIT);
 
+#if MJS_ENABLE_DEBUG
+
   /* remember map offset */
   map_offset = p.mjs->bcode_gen.len - start_idx;
   memcpy(p.mjs->bcode_gen.buf + start_idx +
@@ -1007,12 +1009,21 @@ mjs_parse(const char *path, const char *buf, struct mjs *mjs) {
   mbuf_append(&p.mjs->bcode_gen, p.offset_lineno_map.buf,
               p.offset_lineno_map.len);
 
+#endif
+
+  if (line_no_map == NULL)
+  {
+    mbuf_free(&p.offset_lineno_map);
+  }
+  else
+  {
+    mbuf_move(&p.offset_lineno_map, line_no_map);
+  }
+
   total_size = p.mjs->bcode_gen.len - start_idx;
   memcpy(p.mjs->bcode_gen.buf + start_idx +
              sizeof(mjs_header_item_t) * MJS_HDR_ITEM_TOTAL_SIZE,
          &total_size, sizeof(mjs_header_item_t));
-
-  mbuf_free(&p.offset_lineno_map);
 
   /*
    * If parsing was successful, commit the bcode; otherwise drop generated

@@ -997,7 +997,7 @@ MJS_PRIVATE mjs_err_t mjs_exec_internal(struct mjs *mjs, const char *path,
                                         mjs_val_t *res) {
   size_t off = mjs->bcode_len;
   mjs_val_t r = MJS_UNDEFINED;
-  mjs->error = mjs_parse(path, src, mjs);
+  mjs->error = mjs_parse(path, src, mjs, NULL);
 #if CS_ENABLE_STDIO
   if (cs_log_level >= LL_VERBOSE_DEBUG) mjs_dump(mjs, 1);
 #endif
@@ -1105,8 +1105,8 @@ clean:
 
 #endif // CS_ENABLE_STDIO
 
-mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const char **p, size_t *len) {
-  mjs->error = mjs_parse(path ? path : "<stdin>", src, mjs);
+mjs_err_t mjs_compile(struct mjs *mjs, const char *path, const char *src, const char **p, size_t *len, struct mbuf* line_no_map) {
+  mjs->error = mjs_parse(path ? path : "<stdin>", src, mjs, line_no_map);
   if (mjs->error == MJS_OK) {
     struct mjs_bcode_part *bp = mjs_bcode_part_get(mjs, mjs_bcode_parts_cnt(mjs) - 1);
     *p = bp->data.p;

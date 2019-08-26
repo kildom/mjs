@@ -7,9 +7,13 @@ switch (c.variant) {
         c.target = process.platform == 'win32' ? 'mjsc.exe' : 'mjsc';
         c.src = strarr`${c.src}
             cli.c`;
+        c.defines = strarr`${c.defines}
+            WITH_PARSER`;
         break;
     case 'web':
         c.target = 'mjscompile';
+        c.defines = strarr`${c.defines}
+            WITH_PARSER`;
         break;
     case 'lib':
         c.target = 'mjs.a';
