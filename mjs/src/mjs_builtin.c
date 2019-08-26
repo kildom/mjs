@@ -28,6 +28,8 @@ static void mjs_print(struct mjs *mjs) {
 
 #endif
 
+#if defined(WITH_PARSER) && CS_ENABLE_STDIO
+
 /*
  * If the file with the given filename was already loaded, returns the
  * corresponding bcode part; otherwise returns NULL.
@@ -51,7 +53,6 @@ static struct mjs_bcode_part *mjs_get_loaded_file_bcode(struct mjs *mjs,
   return NULL;
 }
 
-#if defined(WITH_PARSER) && CS_ENABLE_STDIO
 
 static void mjs_load(struct mjs *mjs) {
   mjs_val_t res = MJS_UNDEFINED;

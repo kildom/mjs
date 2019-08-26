@@ -147,8 +147,10 @@ enum mjs_header_items {
                                 OP_BCODE_HEADER byte) */
   MJS_HDR_ITEM_BCODE_OFFSET, /* Offset to the start of the actual bcode (not
                                 counting the OP_BCODE_HEADER byte) */
+#if MJS_ENABLE_DEBUG
   MJS_HDR_ITEM_MAP_OFFSET,   /* Offset to the start of offset-to-line_no mapping
                                 k*/
+#endif
 
   MJS_HDR_ITEMS_CNT
 };

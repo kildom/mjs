@@ -308,53 +308,6 @@ void mjs_dump(struct mjs *mjs, int do_disasm) {
   LOG(LL_VERBOSE_DEBUG, ("------- MJS VM DUMP END"));
 }
 
-MJS_PRIVATE int mjs_check_arg(struct mjs *mjs, int arg_num,
-                              const char *arg_name, enum mjs_type expected_type,
-                              mjs_val_t *parg) {
-  mjs_val_t arg = MJS_UNDEFINED;
-  enum mjs_type actual_type;
-
-  if (arg_num >= 0) {
-    int nargs = mjs_nargs(mjs);
-    if (nargs < arg_num + 1) {
-      mjs_prepend_errorf(mjs, MJS_TYPE_ERROR, "missing argument %s", arg_name);
-      return 0;
-    }
-
-    arg = mjs_arg(mjs, arg_num);
-  } else {
-    /* use `this` */
-    arg = mjs->vals.this_obj;
-  }
-
-  actual_type = mjs_get_type(arg);
-  if (actual_type != expected_type) {
-    mjs_prepend_errorf(mjs, MJS_TYPE_ERROR, "%s should be a %s, %s given",
-                       arg_name, mjs_stringify_type(expected_type),
-                       mjs_stringify_type(actual_type));
-    return 0;
-  }
-
-  if (parg != NULL) {
-    *parg = arg;
-  }
-
-  return 1;
-}
-
-MJS_PRIVATE int mjs_normalize_idx(int idx, int size) {
-  if (idx < 0) {
-    idx = size + idx;
-    if (idx < 0) {
-      idx = 0;
-    }
-  }
-  if (idx > size) {
-    idx = size;
-  }
-  return idx;
-}
-
 MJS_PRIVATE const char *mjs_get_bcode_filename(struct mjs *mjs,
                                                struct mjs_bcode_part *bp) {
   (void) mjs;
@@ -433,3 +386,51 @@ int mjs_get_offset_by_call_frame_num(struct mjs *mjs, int cf_num) {
 }
 
 #endif
+
+
+MJS_PRIVATE int mjs_check_arg(struct mjs *mjs, int arg_num,
+                              const char *arg_name, enum mjs_type expected_type,
+                              mjs_val_t *parg) {
+  mjs_val_t arg = MJS_UNDEFINED;
+  enum mjs_type actual_type;
+
+  if (arg_num >= 0) {
+    int nargs = mjs_nargs(mjs);
+    if (nargs < arg_num + 1) {
+      mjs_prepend_errorf(mjs, MJS_TYPE_ERROR, "missing argument %s", arg_name);
+      return 0;
+    }
+
+    arg = mjs_arg(mjs, arg_num);
+  } else {
+    /* use `this` */
+    arg = mjs->vals.this_obj;
+  }
+
+  actual_type = mjs_get_type(arg);
+  if (actual_type != expected_type) {
+    mjs_prepend_errorf(mjs, MJS_TYPE_ERROR, "%s should be a %s, %s given",
+                       arg_name, mjs_stringify_type(expected_type),
+                       mjs_stringify_type(actual_type));
+    return 0;
+  }
+
+  if (parg != NULL) {
+    *parg = arg;
+  }
+
+  return 1;
+}
+
+MJS_PRIVATE int mjs_normalize_idx(int idx, int size) {
+  if (idx < 0) {
+    idx = size + idx;
+    if (idx < 0) {
+      idx = 0;
+    }
+  }
+  if (idx > size) {
+    idx = size;
+  }
+  return idx;
+}

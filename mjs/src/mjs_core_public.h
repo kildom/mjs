@@ -24,7 +24,7 @@ typedef unsigned char uint8_t;
 extern "C" {
 #endif /* __cplusplus */
 
-#define MJS_ENABLE_DEBUG 1
+#define MJS_ENABLE_DEBUG 0
 
 /*
  *  Double-precision floating-point number, IEEE 754

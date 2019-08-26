@@ -243,6 +243,7 @@ mjs_val_t mjs_get_global(struct mjs *mjs) {
 
 static void mjs_append_stack_trace_line(struct mjs *mjs, size_t offset) {
   if (offset != MJS_BCODE_OFFSET_EXIT) {
+#if MJS_ENABLE_DEBUG
     const char *filename = mjs_get_bcode_filename_by_offset(mjs, offset);
     int line_no = mjs_get_lineno_by_offset(mjs, offset);
     char *new_line = NULL;
@@ -256,6 +257,10 @@ static void mjs_append_stack_trace_line(struct mjs *mjs, size_t offset) {
       filename = "<unknown-filename>";
     }
     mg_asprintf(&new_line, 0, fmt, filename, line_no);
+#else 
+    char *new_line = NULL;
+    mg_asprintf(&new_line, 0, "  at offset %d\n", offset);
+#endif
 
     if (mjs->stack_trace != NULL) {
       char *old = mjs->stack_trace;
