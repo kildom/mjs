@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "str_util.h": "c",
+        "stdarg.h": "c",
+        "platform.h": "c",
+        "platform_custom.h": "c",
+        "stdlib.h": "c",
+        "mjs_core_public.h": "c",
+        "getopt.h": "c",
+        "mjs_exec_public.h": "c",
+        "mjs_exec.h": "c",
+        "md5.h": "c",
+        "compiler.h": "c"
+    }
+}

@@ -121,8 +121,8 @@ function config() {
 
 
 async function queryGitCommitHash() {
-    let procResolve = null;
-    let p = new Promise(resolve => { procResolve = resolve; });
+    let procResolve;
+    let p = new Promise(r => { procResolve = r; });
     try {
         const proc = spawn('git', ['log', '-n', '1', '--format=%h', '--abbrev=16']);
         proc.stdout.on('data', (data) => {

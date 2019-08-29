@@ -46,6 +46,8 @@ struct compiler* c_create()
 
     mbuf_init(&c->map_buf, 0);
 
+    return c;
+
 error_exit:
     if (c != NULL)
     {
