@@ -14,15 +14,11 @@
 #include "common/mbuf.h"
 #include "common/cs_varint.h"
 #include "md5.h"
+#include "version.h"
 
 #include "compiler.h"
 
 #define INITIAL_BUFFER_SIZE (8 * 1024)
-
-const unsigned char mjsc_version[] = {
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, // TODO
-};
-
 
 struct compiler
 {
@@ -64,8 +60,9 @@ error_exit:
 
 int c_begin(struct compiler* c, unsigned char** output, int* length)
 {
-    *output = (unsigned char*)mjsc_version;
-    *length = sizeof(mjsc_version);
+    static const uint64_t ver = VERSION_LONG_LONG;
+    *output = (unsigned char*)&ver;
+    *length = sizeof(ver);
     return MJS_OK;
 }
 
