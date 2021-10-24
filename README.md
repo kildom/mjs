@@ -1,6 +1,8 @@
 Fork of mJS
 =============
 
+This fork of MJS was for ohome-node, but it was replaced by C++ as high level language. **No more development or maintainence** will be done on this fork.
+
 ## Motivation
 This fork was created mainly to allow MJS bytecode to be generated before it goes to the target device.
 There are following benefits:
